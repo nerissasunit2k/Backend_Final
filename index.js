@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 //const Bcrypt = require("bcryptjs");
 const multer = require("multer");
+const Reservation = require('models/model.reservation.js')
 const cors = require("cors");
 const port = 5000
 
@@ -112,6 +113,15 @@ app.post("/reserve", (req,res) => {
   my_pusher.pusher(req.body)
   res.send("hello")
 })
+
+//get reservation
+app.get('reservation/get', (req, res) =>{
+    Reservation.find({}, (err, data) => {
+      if(err) return err;
+      res.send(data)
+    })
+})
+
 
 
 // ------------------------------------------------------------
