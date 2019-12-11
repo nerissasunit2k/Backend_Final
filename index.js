@@ -51,7 +51,7 @@ app.post("/login", (req, res)=>{
   createUser.login(username, password, res)
 });
 
-app.use('/static', express.static(path.join(__dirname, 'uploads')))
+// app.use('/static', express.static(path.join(__dirname, 'uploads')))
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
@@ -101,6 +101,19 @@ app.post('/addItem', (req, res)=>{
 app.get('/getItems', (req,res)=>{
   createItem.getAll(req,res)
 })
+
+
+//testing pusher
+const my_pusher = require('./helper/pusher')
+ 
+
+app.post("/reserve", (req,res) => {
+  console.log(req.body);
+  my_pusher.pusher(req.body)
+  res.send("hello")
+})
+
+
 // ------------------------------------------------------------
 // listen for requests
 app.listen(port, () => {
