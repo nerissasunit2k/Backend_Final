@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const multer = require("multer");
 const Reservation = require('./models/model.reservation.js');
 const cors = require("cors");
-const port = 8000
+const port = 5000
 
 //const pusher = require('pusher');
 
@@ -137,11 +137,28 @@ app.post('/reservation/add', (req, res) => {
     })
 })
 
+app.post('/reserve',(req, res)=>{
+    const data = new Reservation(req.body)
+    var io = req.app.get('socketio')
+    data.save((err, data) => {
+        if (err) return err;
+        Reservation.find({}, (err, data) => {
+            if (err) return err;
+            io.emit('reserveEvent', data)
+        })
+        
+        res.send(data)
+    })
+})
 
-
+const server = app.listen(port, function() {
+    console.log(`Example app listening on port ${port}!`);
+});
+const io = require("socket.io")(server);
+app.set('socketio', io);
 
 // ------------------------------------------------------------
 // listen for requests
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}!`);
-});
+// app.listen(port, () => {
+//     console.log(`Example app listening on port ${port}!`);
+// });
